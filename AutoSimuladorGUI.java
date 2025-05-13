@@ -204,12 +204,15 @@ public class AutoSimuladorGUI extends Application {
                     log.appendText("Semana " + semanaActual + ": Comprado auto por $" + auto.costo + "\n");
 
                     if (rand.nextDouble() < 0.2) {
-                        double ganancia = auto.costo * (gananciaSlider.getValue() / 100);
-                        double precioVenta = auto.costo + ganancia;
-                        capitalActual += precioVenta;
+                        double gananciaBase = 10000 + rand.nextInt(3001);
+                        double porcentajeGanancia = gananciaSlider.getValue() / 100.0;
+                        double ganancia = gananciaBase * porcentajeGanancia;
+                        double restante = gananciaBase - ganancia;
                         gananciaTotal += ganancia;
+                        capitalActual += restante;
                         auto.vendido = true;
-                        log.appendText("→ Vendido directamente por $" + precioVenta + " (20% prob)\n");
+                        log.appendText("→ Vendido directamente (sin reparar). Ganancia base: $" + gananciaBase +
+                                    " | Ganancia total: $" + ganancia + " | Capital añadido: $" + restante + "\n");
                     } else {
                         auto.intentadoDirecto = true;
                     }
@@ -236,12 +239,15 @@ public class AutoSimuladorGUI extends Application {
                 Auto siguiente = colaTaller.poll();
                 salidasCola++;
                 if (rand.nextDouble() < 0.10) {
-                    double ganancia = siguiente.costo * (gananciaSlider.getValue() / 100);
-                    double precioVenta = siguiente.costo + ganancia;
-                    capitalActual += precioVenta;
+                    double gananciaBase = 10000 + rand.nextInt(3001);
+                    double porcentajeGanancia = gananciaSlider.getValue() / 100.0;
+                    double ganancia = gananciaBase * porcentajeGanancia;
+                    double restante = gananciaBase - ganancia;
                     gananciaTotal += ganancia;
+                    capitalActual += restante;
                     siguiente.vendido = true;
-                    log.appendText("→ Vendido directo desde cola por $" + precioVenta + " (10% prob)\n");
+                    log.appendText("→ Vendido directamente (sin reparar) desde cola. Ganancia base: $" + gananciaBase +
+                                " | Ganancia total: $" + ganancia + " | Capital añadido: $" + restante + "\n");
                 } else {
                     int reparacion = 20000 + rand.nextInt(5001);
                     if (capitalActual >= reparacion) {
@@ -264,13 +270,16 @@ public class AutoSimuladorGUI extends Application {
                 auto.semanasEnInventario++;
 
                 if (auto.reparado && auto.semanasPostReparado-- <= 0) {
-                    double ganancia = auto.costo * (gananciaSlider.getValue() / 100);
-                    double precioVenta = auto.costo + ganancia;
-                    capitalActual += precioVenta;
+                    double gananciaBase = 15000 + rand.nextInt(5001);
+                    double porcentajeGanancia = gananciaSlider.getValue() / 100.0;
+                    double ganancia = gananciaBase * porcentajeGanancia;
+                    double restante = gananciaBase - ganancia;
                     gananciaTotal += ganancia;
+                    capitalActual += restante;
                     auto.vendido = true;
-                    log.appendText("Semana " + semanaActual + ": Auto reparado vendido por $" + precioVenta + "\n");
-                } else if (auto.intentadoDirecto && !auto.reparado && !auto.enTaller && !auto.esperandoTaller && auto.semanasEnInventario > 2) {
+                    log.appendText("→ Auto reparado vendido. Ganancia base: $" + gananciaBase +
+                                " | Ganancia total: $" + ganancia + " | Capital añadido: $" + restante + "\n");
+                } else if (auto.intentadoDirecto && !auto.reparado && !auto.enTaller && !auto.esperandoTaller) {
                     auto.esperandoTaller = true;
                     colaTaller.add(auto);
                     entradasCola++;
