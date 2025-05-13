@@ -164,7 +164,7 @@ public class AutoSimuladorGUI extends Application {
                         double gananciaFinal = gananciaBase * (gananciaSlider.getValue() / 100);
                         double precioVenta = auto.costo + gananciaBase;
 
-                        capitalActual += auto.costo + gananciaFinal;
+                        capitalActual += auto.costo + (gananciaBase - gananciaFinal);
                         gananciaTotal += gananciaFinal;
                         auto.vendido = true;
 
@@ -187,7 +187,7 @@ public class AutoSimuladorGUI extends Application {
                         double gananciaFinal = gananciaBase * (gananciaSlider.getValue() / 100);
                         double precioVenta = auto.costo + gananciaBase;
 
-                        capitalActual += auto.costo + gananciaFinal;
+                        capitalActual += auto.costo + (gananciaBase - gananciaFinal);
                         gananciaTotal += gananciaFinal;
                         auto.vendido = true;
 
